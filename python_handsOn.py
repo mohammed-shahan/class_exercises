@@ -546,10 +546,32 @@ print(number)
 number = math.modf(3.14) #return int and fractional part
 print(number)
 
-"""
+
 
 #calling the custom module created
 import prime
 
 answer = prime.checkIfPrime(7)
 print(answer)
+
+
+#decorators - a function which accepts another function, enhance it
+#with a wrapper function and return the enhanced function back
+
+def myDecorator(myFunc):
+    def innerWrapper(): #wrapper function decorates the function received
+        print("Before the Function Call")
+        myFunc()
+        print("After the function call")
+    return innerWrapper
+
+#defining a simple fn to pass into the decorator
+def myFnToPassIntoDecorator():
+    print("A simple function to pass into decorator")
+
+#calling the decorator
+myDecoratordemo = myDecorator(myFnToPassIntoDecorator)
+
+# execute the decorator
+myDecoratordemo()
+"""
