@@ -574,5 +574,144 @@ myDecoratordemo = myDecorator(myFnToPassIntoDecorator)
 
 # execute the decorator
 myDecoratordemo()
+
+
+
+##########################
+#
+
+#a simple function with a print statement
+#which can accept at least one fn and can optionally return a fn
+
+# a simple fn with a print statement
+def greet(name):
+    return "Hello{}".format(name)
+
+#defining the higher order fn which can accept fn
+def print_greetings(fn,param):
+    print(fn(param))
+
+#calling the higher order fn
+print_greetings(greet,"Abhi")
+
+#map() fn - a higher order fn which can accept a fn and also
+#a list of iterable params. Each param will be applied to the function
+#and result will be returned back as a map obj
+#we can later convert this map obj into set/tuple
+
+#defining a simple fn
+def mymapfunction(a):
+    return a*a
+
+#passing a lambda fn as well as the iterables
+x = map(lambda x:x*x, (1,2,3,4))
+#x is a map obj, need to convert that into a set/tuple
+print(tuple(x))
+
+#filter function
+def filterFn(x):
+    if(x>=3):
+        return x
+y = filter(filterFn, (1,2,3,4,5,6)) # memory efficient compared to for loop
+print(list(y))
+
+y = filter(lambda x : x >= 3, (1,2,3,4,5,6))
+print(list(y))
+
+#reduce function
+
+
+#class and regular function without the abstract class
+class Lion:
+    def give_food(self):
+        print("Feeding a lion with raw meat")
+
+class Panda:
+    def feed_animal(self):
+        print("Feeding a panda with bamboo") 
+
+class Snake:
+    def feed_snake(self):
+        print("Feeding a snake with mice")
+
+#Creating objects for animals we plan to feed
+simba = Lion()
+kungfupanda = Panda()
+kingcobra = Snake()
+
+#calling the feeding fn for each of them
+simba.give_food()
+kungfupanda.feed_animal()
+kingcobra.feed_snake
+
+
+
+#abstract class example
+
+from abc import ABC, abstractmethod
+class Animal(ABC):
+    @abstractmethod
+    def feed(self):
+        pass
+# class Lion inheriting abstract class Animal
+class Lion(Animal):
+    def feed(self):
+        print("Feeding the Lion with raw meat")
+class Panda(Animal):
+    def feed(self):
+        print("Feeding the panda with Bamboo")
+class Snake(Animal):
+    def feed(self):
+        print("feeding mice")
+    def feed_snake(self):
+        print("Feeding a snake with mice")
+
+simba = Lion()
+simba.feed()
+panda = Panda()
+cobra = Snake()
+panda.feed()
+cobra.feed()
+
+#instead of calling method repeatedly like the above,
+#we can have a for loop for the list of classes
+zoo_class_list = [Lion(), Panda(), Snake()]
+
+for animal in zoo_class_list:
+    animal.feed()
+
+
+
+class Panda(Animal):
+    def diet(self):
+        return["bamboo","Leaves"]
+    def feed(self):
+        print("")
 """
 
+myFile = open(text1.txt, F)
+
+
+#reading the contents of the line by line using for loop
+for line in myFile:
+    print(line)
+
+#we need to close the file cursor/obj once we completed
+#the operation associated with it.
+myFile.close()
+
+
+myFile = open("myfile.txt","r")
+#read all the lines and return it as a list
+myFileContestsList = myFile.readlines()
+print(myFileContentsList)
+
+ 
+ 
+#renaming a file in python os module
+import os
+if os.path.exists("text1.txt"):
+    os.rename("myfile.txt", "myfilenew.txt")
+    print("rename success")
+else:
+    print("The file doesn't exist")
