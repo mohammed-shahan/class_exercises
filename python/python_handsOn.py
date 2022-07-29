@@ -687,31 +687,237 @@ class Panda(Animal):
         return["bamboo","Leaves"]
     def feed(self):
         print("")
-"""
-
-myFile = open(text1.txt, F)
 
 
-#reading the contents of the line by line using for loop
-for line in myFile:
+
+
+###################################################################################
+
+#File handling in python
+# opening a file in the same directory in read mode
+from fileinput import close
+
+
+myfile = open("myfile.txt", "r")
+# read the contents using read()
+print(myfile.read())
+print(myfile.read(10)) #read the first 10 characters
+print(myfile.read(30)) #will read from where the last read was stopped
+print(myfile.readline()) #will read a single line form the file
+
+# reading the contents of the file line by line using a for loop
+for line in myfile:
     print(line)
+myfile.close()
 
-#we need to close the file cursor/obj once we completed
-#the operation associated with it.
-myFile.close()
+myfile = open("myfile.txt", "r")
+# read all the lines 
+contentList = myfile.readlines()
+print(contentList)
 
+# close he cursor
+myfile.close()
 
-myFile = open("myfile.txt","r")
-#read all the lines and return it as a list
-myFileContestsList = myFile.readlines()
-print(myFileContentsList)
+#opening the file cursor in append mode
+#whatever we write will be appended to the end of file
+myfile = open("myfile.txt", "a")
+#write() etod is used to write text / data to a file
+myfile.write("This is a new line\n")
+myfile.close()
 
- 
- 
-#renaming a file in python os module
+myfile = open("myfile.txt", "r")
+for line in myfile:
+    print(line)
+myfile.close()
+
+#opening the file cursor in write mode
+#whatever we write will overwrite the file
+myfile = open("myfile.txt", "w")
+#write() method is used to write text / data to a file
+myfile.write("This is a new line\n")
+myfile.close()
+
+#opening the file cursor in read mode
+myfile = open("myfile.txt", "r")
+print(f"The file pointer is now at {myfile.tell()}")
+# contentList = myfile.readlines()
+# print(contentList)
+# print(myfile.readline())
+# change the file pointer offset using seek
+myfile.seek(29) #reading will start from 30
+print(f"The file pointer is now at {myfile.tell()}")
+contentList = myfile.readlines()
+print(f"The file pointer is now at {myfile.tell()}")
+print(contentList)
+myfile.close()
+
+#File Operations
+#Renaming a file
 import os
-if os.path.exists("text1.txt"):
-    os.rename("myfile.txt", "myfilenew.txt")
-    print("rename success")
+if os.path.exists("myfilenew.txt"):
+    os.rename("myfilenew.txt", "myfile.txt")
+    print("The file has been renamed")
 else:
     print("The file doesn't exist")
+
+#Deleting a file
+import os
+if os.path.exists("myfile.txt"):
+    os.remove("myfile.txt")
+    print("The file has been removed")
+else:
+    print("The file doesn't exist")
+
+#Folder Manipulations in Python
+import os
+#creating a new directory
+# os.mkdir("mydir")
+#print the current working directory
+print(os.getcwd())
+#change the current working directory
+os.chdir("mydir")
+print(os.getcwd())
+#delete the directory
+os.chdir("..") #go back to the previous directory
+print(os.getcwd())
+os.rmdir("mydir")
+#get the list of files
+result  = os.listdir(os.getcwd())
+print(result)
+
+#run an external python file (fileoutputsave.py)
+#save its results as txt file
+
+import subprocess
+with open("myfile.txt", "wb") as f:
+    subprocess.check_call(["python", "fileoutputsave.py"], stdout=f)
+
+#Python Exceptional Handling Basics
+
+try:
+    div = 4 // 0
+except Exception as e:
+    print("Attempting to divide by zero")
+    print(f"{type(e).__name__} occered. More details below") #get the exception name
+    print(e) #print the entire details of the exception
+else:
+    print(f"Division Completed and result is : {div}")
+finally:
+    print("This is code of finally clause")
+
+#Nested try except statements in Python
+
+try:
+    f = open("somefile.txt")
+    try :
+        f.write("Hello world")
+    except:
+        print("some write error occered")
+    finally:
+        f.close()
+except:
+    print("The file cannot be opened")
+
+#MSSQL Database Connection in Python
+#importing pyodbc module
+import pyodbc
+
+#create a connection string
+myConString = 'Driver={SQL Server};Server=DESKTOP-517KMB6\SQLEXPRESS;Database=employee_db;Trusted_Connection=yes;'
+#create a connection with the connection string
+myconn = pyodbc.connect(myConString)
+try: 
+    #get the cursor object
+    mycursor = myconn.cursor()
+
+    #using cursor, we can execute SQL commands
+    mycursor.execute('SELECT * FROM EmployeeMaster WHERE Salary = 3000')
+
+    for row in mycursor:
+        print(row)
+except Exception as e:
+    print(f"{type(e).__name__}")
+
+myconn.commit()
+myconn.close()
+
+#Creating a table in the database
+myconn = pyodbc.connect(myConString)
+
+try:
+    mycursor = myconn.cursor()
+    mycursor.execute('''CREATE TABLE EmployeeMaster3(
+        Id INT IDENTITY PRIMARY KEY,
+        EmployeeCode VARCHAR(10),
+        EmployeeName VARCHAR(25),
+        DepartmentCode VARCHAR(10),
+        LocationCode VARCHAR(10),
+        Salary INT
+    );''')
+except Exception as e:
+    print("Cannot create the table because : ")
+    print(f"{type(e).__name__} occured.")
+    print(e)
+
+myconn.commit()
+myconn.close()
+
+print("Statement after the query")
+
+import pyodbc
+
+#create a connection string
+myConString = 'Driver={SQL Server};Server=DESKTOP-517KMB6\SQLEXPRESS;Database=employee_db;Trusted_Connection=yes;'
+#create a connection with the connection string
+myconn = pyodbc.connect(myConString)
+try: 
+    #get the cursor object
+    mycursor = myconn.cursor()
+
+    #using cursor, we can execute SQL commands
+    mycursor.execute('SELECT * FROM EmployeeMaster')
+
+    # for row in mycursor.fetchall():
+    #     print(row)
+
+    #to get the data as a dictionary
+    employees = [{'empcode': row[1]}, {'empname': row[2]}for row in mycursor.fetchall()]
+    print(employees)
+except Exception as e:
+    print(f"{type(e).__name__}")
+
+myconn.commit()
+myconn.close()
+"""
+
+#insert values into the database
+import pyodbc
+
+#create a connection string
+myConString = 'Driver={SQL Server};Server=DESKTOP-517KMB6\SQLEXPRESS;Database=employee_db;Trusted_Connection=yes;'
+#create a connection with the connection string
+myconn = pyodbc.connect(myConString)
+try: 
+    #get the cursor object
+    mycursor = myconn.cursor()
+
+    #using cursor, we can execute SQL commands
+#   mycursor.execute('''INSERT INTO EmployeeMaster VALUES
+# ('E0088', 'Arjun', 'IT', 'TVM', 9000)''')
+
+    # mycursor.execute("INSERT INTO EmployeeMaster VALUES (?, ?, ?, ?, ?)",('E0099', 'Ajun', 'IT', 'TVM', 12000))
+
+    mycursor.execute("SELECT * FROM EmployeeMaster")
+
+    # for i in mycursor:
+    #     print(i)
+    #to get the data as a dictionary
+    employees = [{'empcode': row[1], 'empname': row[2], 'empdept': row[3], 'emploc': row[4], 'empsal': row[5]} for row in mycursor.fetchall()]
+    print(employees)
+except Exception as e:
+    print(f"{type(e).__name__}")
+    print(e)
+
+myconn.commit()
+myconn.close()
+
